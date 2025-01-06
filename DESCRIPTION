@@ -1,0 +1,10 @@
+Package: ChronoPreH
+Type: Package
+Title: This package is a prediction model for high-dimensional multivariate data overtime.
+Version: 0.1.0
+Authors@R: Yunxiao Duan <yduan@bjmu.edu.cn>
+Maintainer: Yunxiao Duan <yduan@bjmu.edu.cn>
+Description: This prediction model is used for high-dimensional and multivariate data overtime. It can be applied in many areas, I personally developed this for global aging population and at the hope of appling it in the field of medicine. However, it may still be applied in many other fields if possible, such as astronomy and physics.
+License: GLP-3
+Encoding: UTF-8
+LazyData: true
