@@ -4,7 +4,7 @@ FitCat <- function(time, class, future_time, true_class) {
   results <- list()
   probs <- list()
 
-  df <- data.frame(time = time, class = as.character(class))
+  df <- data.frame(time = time, class = as.factor(class))
 
   ## 1. multinomial logistic regression - nnet::multinom
   try({
