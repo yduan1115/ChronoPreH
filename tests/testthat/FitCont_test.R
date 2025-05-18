@@ -17,7 +17,7 @@ library(tibble)
 library(dplyr)
 # library(brms) # need to install it from the "Install" button, not using install.packages
 
-source("/Users/Yun/Desktop/R_predM/ChronoPreH/R/FitCont.R")
+source("~/ChronoPreH/R/FitCont.R")
 
 # Define time series
 time <- 1:10
