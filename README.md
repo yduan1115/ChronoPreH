@@ -1,8 +1,8 @@
 Hi, so here is the description of this R package, which in essence is a "meta" of multiple prediction models synthetically.
 
-Basically, it is used for the prediction of large datasets, including mostly medical datasets, for the usage of disease prediction. It can also be used for astronomical datasets to predict the age of stars and planets. Maybe also more, but I am just familiar with these two fields. Happy to communicate if you want to apply it in your discipline! : )
+Basically, it is used for the prediction of large datasets, including mostly medical datasets, for the usage of disease prediction. It can also be used for astronomical datasets to predict the age of stars and planets (actually since the data for astronomy is always very large, I'm thinking maybe python is more fit, but I like R language very much...). Maybe also more, but I am just familiar with these two fields. Happy to communicate if you want to apply it in your discipline! : )
 
-There are three steps for using thie R package:
+There are three steps for using this R package:
 
 1. Fit function
 
@@ -46,8 +46,13 @@ I was also thinking about ARIMA, but it does not include x as time. Basically, i
 
 (2) Categorical variable
 
-For categorical variables, we used slightly different models, because many models used in continuous variables are not applicable here. We have 5 models for categorical variable, not too much, but I think is decent, in the future there can be more.
+For categorical variables, we used slightly different models, because many models used in continuous variables are not applicable here. We have 5 models for categorical variable, not very much, but I think is decent, in the future there can be more.
 
+The script file is in R/FitCat.R, and this argument is named "FitCat".
+
+The test file is in test/testthis/FitCat_test.R
+
+Here are the included prediction models (x=time, y=variable of interest):
 - multinomial logistic regression (nnet::multinom)
 - random forest (randomForest)
 - ranger (ranger)
@@ -57,7 +62,7 @@ For categorical variables, we used slightly different models, because many model
 When doing this I realized a slight (actually can be huge) problem here, that, since the result is categorical, there can be more than one model having the correct prediction; also, there can be no model having correct prediction. To pick the best model, we calculated prediction probability, and use it to decide when there are more than one with correct prediction result or all have wrong prediction result. If there is only one model having the correct prediction, then that will be it regardless of prediction probability.
 
 still working on the rest...
-
+also I'm trying to find a good dataset in R for testing...
 
 
 
