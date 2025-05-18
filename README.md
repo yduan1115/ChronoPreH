@@ -59,7 +59,7 @@ Here are the included prediction models (x=time, y=variable of interest):
 - eXtreme Gradient Boosting Training (xgboost)
 - Support Vector Machines (svm)
 
-When doing this I realized a slight (actually can be huge) problem here, that, since the result is categorical, there can be more than one model having the correct prediction; also, there can be no model having correct prediction. To pick the best model, we calculated prediction probability, and use it to decide when there are more than one with correct prediction result or all have wrong prediction result. If there is only one model having the correct prediction, then that will be it regardless of prediction probability.
+When doing this I realized a slight (actually can be huge) problem here, that, since the result is categorical, there can be more than one model having the correct prediction; also, there can be no model having correct prediction. To pick the best model, I calculated prediction probability, and use it to decide when there are more than one with correct prediction result or all have wrong prediction result. If there is only one model having the correct prediction, then that will be it regardless of prediction probability.
 
 still working on the rest...
 also I'm trying to find a good dataset in R for testing...
