@@ -16,7 +16,7 @@
 install.packages("devtools")
 library(devtools)
 library(usethis)
-use_git()
+use_git() #https://github.com/yduan1115/ChronoPreH
 
 hello <- function() {
   print("Hello, world!")
@@ -29,3 +29,37 @@ hello <- function() {
 #' @param x Description of the parameter `x`.
 #' @return What the function returns.
 #' @examples
+
+# split a single string into many parts
+x = "age, gender, height, BMI"
+strsplit(x, split = ',')
+str(strsplit(x, split=','))
+unlist(strsplit(x, split=','))
+strsplit(x, split=',')[[1]]
+
+strsplit1 = function(x,split){
+  strsplit(x,split=split)[[1]]
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

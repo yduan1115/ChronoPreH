@@ -8,3 +8,18 @@ Description: This prediction model is used for high-dimensional and multivariate
 License: GLP-3
 Encoding: UTF-8
 LazyData: true
+Imports:
+    stats,
+    splines,
+    mgcv,
+    locfit,
+    randomForest,
+    ranger,
+    xgboost,
+    zoo,
+    caret,
+    e1071,
+    nnet,
+    tibble,
+    dplyr
+RoxygenNote: 7.3.2
