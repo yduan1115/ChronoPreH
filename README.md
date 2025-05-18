@@ -46,7 +46,7 @@ I was also thinking about ARIMA, but it does not include x as time. Basically, i
 
 (2) Categorical variable
 
-For categorical variables, we used slightly different models, because many models used in continuous variables are not applicable here. We have 5 models for categorical variable, not very much, but I think is decent, in the future there can be more.
+For categorical variables, I used slightly different models, because many models used in continuous variables are not applicable here. I have 5 models for categorical variable, not very much, but I think is decent, in the future there can be more.
 
 The script file is in R/FitCat.R, and this argument is named "FitCat".
 
