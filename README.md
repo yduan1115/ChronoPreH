@@ -46,7 +46,23 @@ I was also thinking about ARIMA, but it does not include x as time. Basically, i
 
 (2) Categorical variable
 
-2025-05-18 still working on it...
+For categorical variables, we used slightly different models, because many models used in continuous variables are not applicable here. We have 5 models for categorical variable, not too much, but I think is decent, in the future there can be more.
+
+- multinomial logistic regression (nnet::multinom)
+- random forest (randomForest)
+- ranger (ranger)
+- eXtreme Gradient Boosting Training (xgboost)
+- Support Vector Machines (svm)
+
+When doing this I realized a slight (actually can be huge) problem here, that, since the result is categorical, there can be more than one model having the correct prediction; also, there can be no model having correct prediction. To pick the best model, we calculated prediction probability, and use it to decide when there are more than one with correct prediction result or all have wrong prediction result. If there is only one model having the correct prediction, then that will be it regardless of prediction probability.
+
+still working on the rest...
+
+
+
+
+
+
 
 
 
