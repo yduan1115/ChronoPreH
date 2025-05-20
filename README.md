@@ -12,25 +12,29 @@ There are 2 types of variables, continuous and categorical, which gives as 3 com
 
 (1) Continuous variable & continuous variable
 
-Test: Differenced Pearson Correlation
+- Test: Differenced Pearson Correlation
 
-Why: Controls for autocorrelation in time series by measuring linear association between changes (first differences) in the two variables.
+- Why: Controls for autocorrelation in time series by measuring linear association between changes (first differences) in the two variables.
+
 
 (2) Categorical variable & categorical variable
 
-Test: Chi-square Test of Independence
+- Test: Chi-square Test of Independence
 
-Why: Assesses whether the two categorical variables are independent (non-temporal), ignoring sequence but testing overall association.
+- Why: Assesses whether the two categorical variables are independent (non-temporal), ignoring sequence but testing overall association.
+
 
 (3) Continuous variable & categorical variable
 
-Test: One-way ANOVA on Differenced Continuous Variable
+- Test: One-way ANOVA on Differenced Continuous Variable
 
-Why: Tests if changes in the continuous variable differ across categorical groups, while accounting for temporal dependence.
+- Why: Tests if changes in the continuous variable differ across categorical groups, while accounting for temporal dependence.
+
 
 The argument we create to test the correlation is write in R/ChronoCorr.R
 
 The test for this argument is in test/testthat/ChronoCorr_test.R
+
 
 
 2. Fit function
