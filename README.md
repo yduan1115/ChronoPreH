@@ -14,7 +14,7 @@ Nevertheless, the method is the same for both types of datasets. I just want to 
 
 (1) Continuous variable
 
-There are several methods you can use to model continuous variable overtime, and surely more in the future, I just collected 13 methods, and like run them for prediction at the same time, use the absolute error (|predict result - true value|) to get the best model for the specific variable. This is different from other packages or methods or papers that use various models but apply the model through all variables; now my model do for each variable in the dataset, their unique "best model". I think this is great because for different models, they might be heterogeneous across different variables, so the robustness is not necessary even.
+There are several methods you can use to model continuous variable overtime, and surely more in the future, I just collected 12 methods, and like run them for prediction at the same time, use the absolute error (|predict result - true value|) to get the best model for the specific variable. This is different from other packages or methods or papers that use various models but apply the model through all variables; now my model do for each variable in the dataset, their unique "best model". I think this is great because for different models, they might be heterogeneous across different variables, so the robustness is not necessary even.
 
 The script file is in R/FitCont.R, and this argument is named "FitCont".
 
@@ -29,7 +29,6 @@ Here are the included prediction models (x=time, y=variable of interest):
 - Interpolating Splines (splinefun)
 - Smoothing Spline (smooth.spline)
 - Generalized additive models with integrated smoothness estimation (gam)
-- linear (or constant) interpolation (approxfun)
 - Local Regression, Likelihood and Density Estimation (locfit)
 - random forest (randomForest)
 - Ranger is a fast implementation of random forests (Breiman 2001) or recursive partitioning, particularly suited for high dimensional data (ranger)
@@ -43,7 +42,11 @@ I really was trying to include Bayesian analysis because it is so popular these 
 
 I was also thinking about ARIMA, but it does not include x as time. Basically, it ranks the y-values according to time-series. I will also try to adjust this in the future.
 
-To visualize the results conveniently, I created another argument: FitCont_vi. It 
+To visualize the results conveniently, I created another argument: FitCont_vi. It a forest plot for the result of the 12 models above, showing the error from prediction to the true value, and highlight the closest one with red. In this way, we can see which model is the best, and how much.
+
+It's in R/FitCont_vi.R
+
+The PDF of the figure generated from sample is in test/visualization/FitCont_visualization_test.pdf
 
 (2) Categorical variable
 
@@ -69,7 +72,7 @@ To visualize the results conveniently, I created another argument: FitCat_vi. Th
 
 It's in R/FitCat_vi.R
 
-Also, there is a pdf file for the result figure generated using FitCat_vi of the test file.
+Also, there is a pdf file for the result figure generated using FitCat_vi in test/visualization/FitCat_visualization_test
 
 still working on the rest...
 also I'm trying to find a good dataset in R for testing...
