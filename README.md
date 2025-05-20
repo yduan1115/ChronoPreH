@@ -43,10 +43,11 @@ I really was trying to include Bayesian analysis because it is so popular these 
 
 I was also thinking about ARIMA, but it does not include x as time. Basically, it ranks the y-values according to time-series. I will also try to adjust this in the future.
 
+To visualize the results conveniently, I created another argument: FitCont_vi. It 
 
 (2) Categorical variable
 
-For categorical variables, I used slightly different models, because many models used in continuous variables are not applicable here. I have 5 models for categorical variable, not very much, but I think is decent, in the future there can be more.
+For categorical variables, I used slightly different models, because many models used in continuous variables are not applicable here. I have 8 models for categorical variable, in the future there can be more.
 
 The script file is in R/FitCat.R, and this argument is named "FitCat".
 
@@ -58,8 +59,17 @@ Here are the included prediction models (x=time, y=variable of interest):
 - ranger (ranger)
 - eXtreme Gradient Boosting Training (xgboost)
 - Support Vector Machines (svm)
+- naive Bayes (naiveBayes)
+- Decision tree (rpart)
+- k-Nearest Neighbors (knn)
 
 When doing this I realized a slight (actually can be huge) problem here, that, since the result is categorical, there can be more than one model having the correct prediction; also, there can be no model having correct prediction. To pick the best model, I calculated prediction probability, and use it to decide when there are more than one with correct prediction result or all have wrong prediction result. If there is only one model having the correct prediction, then that will be it regardless of prediction probability.
+
+To visualize the results conveniently, I created another argument: FitCat_vi. This can easily show the models with correction or wrong prediction, and circle the correct prediction model with highest prediction probability.
+
+It's in R/FitCat_vi.R
+
+Also, there is a pdf file for the result figure generated using FitCat_vi of the test file.
 
 still working on the rest...
 also I'm trying to find a good dataset in R for testing...
