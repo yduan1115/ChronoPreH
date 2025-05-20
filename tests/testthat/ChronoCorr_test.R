@@ -2,7 +2,7 @@ library(ggplot2)
 library(nlme)
 
 # Load ChronoCorr and interpret_correlation functions
-source("/Users/Yun/Desktop/R_predM/ChronoPreH/R/ChronoCorr.R")
+source("~/ChronoPreH/R/ChronoCorr.R")
 
 # -----------------------------------------------
 # 1. Continuous vs Continuous
