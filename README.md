@@ -2,44 +2,7 @@ Hi, here is the description of this R package ChronoPreH, which in essence is a 
 
 Basically, it is used for the prediction of large datasets, including mostly medical datasets, for the usage of disease prediction. It can also be used for astronomical datasets to predict the age of stars and planets (actually since the data for astronomy is always very large, I'm thinking maybe python is more fit, but I like R language very much...). Maybe also more, but I am just familiar with these two fields. Happy to communicate if you want to apply it in your discipline! : )
 
-There are three steps for using this R package:
-
-1. Correlation test
-
-In a dataset, there can be multiple variables. If we target on predicting the value of one variable, and wish to adjust for other variables, we need to first test the correlation of this variable with other variables. If they have no correlation, we don't have to consider it in future analysis; if they do have correlation, we can do further adjustments accordingly. The datasets we use are high-dimensional time-series data, details to be explained in section 2.
-
-There are 2 types of variables, continuous and categorical, which gives as 3 combinations of variable correlations:
-
-(1) Continuous variable & continuous variable
-
-- Test: Differenced Pearson Correlation
-
-- Why: Controls for autocorrelation in time series by measuring linear association between changes (first differences) in the two variables.
-
-
-(2) Categorical variable & categorical variable
-
-- Test: Chi-square Test of Independence
-
-- Why: Assesses whether the two categorical variables are independent (non-temporal), ignoring sequence but testing overall association.
-
-
-(3) Continuous variable & categorical variable
-
-- Test: One-way ANOVA on Differenced Continuous Variable
-
-- Why: Tests if changes in the continuous variable differ across categorical groups, while accounting for temporal dependence.
-
-
-The argument we create to test the correlation is write in R/ChronoCorr.R
-
-The test for this argument is in test/testthat/ChronoCorr_test.R
-
-
-
-2. Fit function
-
-After knowing the variables correlated with target variable, we need to model each variable to make predictions.
+1. Fit function for a single person
 
 This is for a single variable in the dataset. For instance, in CHARLS (a longitudinal cohort study by Peking University: https://charls.pku.edu.cn/en/), there are variables such as age, sex, HbA1c, smoking status, alcohol drinking status, whether or not having stroke, whether or not having dementia, whether or not having cancer, and so on. These kind of datasets, similar to the global aging datasets (https://g2aging.org/home) like HRS (Health Retirement Studies, United States, https://hrs.isr.umich.edu/about), and many other countries, collect data as "waves", for instance, every 1 year, every 2 years, they collect medical data from their population. And best of all, these datasets have harmonized data across multiple waves, so like for each variable, it has year1, year2, year3 data cleaned. Now the years (time) are x (e.g. 2021,2022,2023 ***BUT THE TIMEPOINTS ARE DISCRETE!!!***), and the y are the values of the variables. y can be continuous (e.g. 0.01,0.02,0.03), or categorical (0,1,0).
 
@@ -50,6 +13,8 @@ Nevertheless, the method is the same for both types of datasets. I just want to 
 (1) Continuous variable
 
 There are several methods you can use to model continuous variable overtime, and surely more in the future, I just collected 12 methods, and like run them for prediction at the same time, use the absolute error (|predict result - true value|) to get the best model for the specific variable. This is different from other packages or methods or papers that use various models but apply the model through all variables; now my model do for each variable in the dataset, their unique "best model". I think this is great because for different models, they might be heterogeneous across different variables, so the robustness is not necessary even.
+
+I make this to adjust for confounders whenever applicable in the 12 methods.
 
 The script file is in R/FitCont.R, and this argument is named "FitCont".
 
@@ -87,6 +52,8 @@ The PDF of the figure generated from sample is in test/visualization/FitCont_vis
 
 For categorical variables, I used slightly different models, because many models used in continuous variables are not applicable here. I have 8 models for categorical variable, in the future there can be more.
 
+Likewise, confounders are adjusted whenever possible.
+
 The script file is in R/FitCat.R, and this argument is named "FitCat".
 
 The test file is in test/testthis/FitCat_test.R
@@ -109,7 +76,14 @@ It's in R/FitCat_vi.R
 
 Also, there is a pdf file for the result figure generated using FitCat_vi in test/visualization/FitCat_visualization_test
 
+
+2. Fit function for a population
+
+I'm actually thinking to write a loop for this, but this really is not as simple as I thought. Takes forever to debug.
+
+
 still working on the rest...
+
 also I'm trying to find a good dataset in R for testing...
 
 
