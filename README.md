@@ -12,9 +12,9 @@ Nevertheless, the method is the same for both types of datasets. I just want to 
 
 (1) Continuous variable
 
-There are several methods you can use to model continuous variable overtime, and surely more in the future, I just collected 12 methods, and like run them for prediction at the same time, use the absolute error (|predict result - true value|) to get the best model for the specific variable. This is different from other packages or methods or papers that use various models but apply the model through all variables; now my model do for each variable in the dataset, their unique "best model". I think this is great because for different models, they might be heterogeneous across different variables, so the robustness is not necessary even.
+There are several methods you can use to model continuous variable overtime, and surely more in the future, I just collected 11 methods, and like run them for prediction at the same time, use the absolute error (|predict result - true value|) to get the best model for the specific variable. This is different from other packages or methods or papers that use various models but apply the model through all variables; now my model do for each variable in the dataset, their unique "best model". I think this is great because for different models, they might be heterogeneous across different variables, so the robustness is not necessary even.
 
-I make this to adjust for confounders whenever applicable in the 12 methods.
+Confounders (continuous or categorical, can be manually defined) are adjusted whenever applicable in the 11 methods. (Previously I was thinking about defining whether a confounder is categorical or continuous automatically, but it always generates error, so I think manually define would be better, and more efficient.)
 
 The script file is in R/FitCont.R, and this argument is named "FitCont".
 
@@ -29,7 +29,6 @@ Here are the included prediction models (x=time, y=variable of interest):
 - Interpolating Splines (splinefun)
 - Smoothing Spline (smooth.spline)
 - Generalized additive models with integrated smoothness estimation (gam)
-- Local Regression, Likelihood and Density Estimation (locfit)
 - random forest (randomForest)
 - Ranger is a fast implementation of random forests (Breiman 2001) or recursive partitioning, particularly suited for high dimensional data (ranger)
 - eXtreme Gradient Boosting Training (xgboost)
