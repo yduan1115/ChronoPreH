@@ -1,3 +1,5 @@
+About ChronoPreH
+
 Here is the description of this R package ChronoPreH, which in essence is a "meta" of multiple prediction models synthetically.
 
 Basically, it is used for the prediction of large datasets, including mostly medical datasets, for the usage of disease prediction. It can also be used for astronomical datasets to predict the age of stars and planets (actually since the data for astronomy is always very large, I'm thinking maybe python is more fit, but I like R language very much...). Maybe also more, but I am just familiar with these two fields. Happy to communicate if you want to apply it in your discipline! : )
