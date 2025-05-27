@@ -1,143 +1,145 @@
-# For continuous variables
-
-#' Fit Time Series with Multiple Models for Continuous Data
-#'
-#' Fits several models to time series data and predicts a future value.
-#' Returns predicted values, signed errors, absolute errors, and the best model.
-#'
-#' @param time A numeric vector of time points.
-#' @param value A numeric vector of observed values.
-#' @param future_time A numeric value indicating the time to predict.
-#' @param true_value The actual value at the future time (for error calculation).
-#'
-#' @return A list with predicted values, signed and absolute errors, and best model.
-#' @export
-#'
-#' @examples
-#' time <- 1:10
-#' value <- c(3.2, 3.8, 4.5, 5.2, 5.8, 6.3, 7.1, 7.4, 7.9, 8.5)
-#' future_time <- 12
-#' true_value <- 9.5
-#' result <- FitCont(time, value, future_time, true_value)
-#' print(result$best_model)
-
-FitCont <- function(time, value, future_time, true_value) {
+FitCont <- function(time, value, future_time, true_value,
+                    continuous_confounders = NULL,
+                    categorical_confounders = NULL) {
 
   results <- list()
   df <- data.frame(time = time, value = value)
 
+  # Add confounders to the dataframe if provided
+  if (!is.null(continuous_confounders)) {
+    df <- cbind(df, continuous_confounders)
+  }
+  if (!is.null(categorical_confounders)) {
+    df <- cbind(df, categorical_confounders)
+    # Convert categorical confounders to factors
+    df[names(categorical_confounders)] <- lapply(df[names(categorical_confounders)], factor)
+  }
+
+  # Create formula with confounders if provided
+  create_formula <- function(time_var, for_locfit = FALSE) {
+    terms <- time_var
+    if (!is.null(continuous_confounders)) {
+      terms <- c(terms, names(continuous_confounders))
+    }
+    if (!is.null(categorical_confounders) && !for_locfit) {
+      terms <- c(terms, names(categorical_confounders))
+    }
+    as.formula(paste("value ~", paste(terms, collapse = " + ")))
+  }
+
+  # Create newdata for prediction
+  create_newdata <- function(future_time) {
+    newdata <- data.frame(time = future_time)
+
+    # Add continuous confounders (set to median)
+    if (!is.null(continuous_confounders)) {
+      for (col in names(continuous_confounders)) {
+        newdata[[col]] <- median(continuous_confounders[[col]], na.rm = TRUE)
+      }
+    }
+
+    # Add categorical confounders (set to most frequent level)
+    if (!is.null(categorical_confounders)) {
+      for (col in names(categorical_confounders)) {
+        freq_table <- table(categorical_confounders[[col]])
+        newdata[[col]] <- factor(names(freq_table)[which.max(freq_table)],
+                                 levels = levels(df[[col]]))
+      }
+    }
+
+    return(newdata)
+  }
+
+  # GAM-specific formula creator
+  create_gam_formula <- function() {
+    terms <- "s(time)"
+
+    # Add continuous confounders with smooth terms
+    if (!is.null(continuous_confounders)) {
+      terms <- c(terms, paste0("s(", names(continuous_confounders), ")"))
+    }
+
+    # Add categorical confounders as linear terms
+    if (!is.null(categorical_confounders)) {
+      terms <- c(terms, names(categorical_confounders))
+    }
+
+    as.formula(paste("value ~", paste(terms, collapse = " + ")))
+  }
+
   ## 1. lm - library{stats}
   try({
-    m <- lm(value ~ time, data = df)
-    pred <- predict(m, newdata = data.frame(time = future_time))
+    m <- lm(create_formula("time"), data = df)
+    pred <- predict(m, newdata = create_newdata(future_time))
     results$lm <- pred
-  })
+  }, silent = TRUE)
 
   ## 2. poly (degree 2) - library{stats}
   try({
-    m <- lm(value ~ poly(time, 2), data = df)
-    pred <- predict(m, newdata = data.frame(time = future_time))
+    m <- lm(create_formula("poly(time, 2)"), data = df)
+    pred <- predict(m, newdata = create_newdata(future_time))
     results$poly <- pred
-  })
+  }, silent = TRUE)
 
   ## 3. nls (simple exponential) - library{stats}
   try({
     m <- nls(value ~ a * exp(b * time), data = df, start = list(a = 1, b = 0.1))
     pred <- predict(m, newdata = data.frame(time = future_time))
     results$nls <- pred
-  })
+  }, silent = TRUE)
 
-  ## 4. splinefun - library{stats} linear line exactly through all points - rare but useful
+  ## 4. splinefun - library{stats}
   try({
     sf <- splinefun(time, value)
     results$splinefun <- sf(future_time)
-  })
+  }, silent = TRUE)
 
   ## 5. smooth.spline - library{stats}
   try({
     m <- smooth.spline(time, value)
     results$smooth.spline <- predict(m, x = future_time)$y
-  })
+  }, silent = TRUE)
 
   ## 6. gam - library{mgcv}
   try({
-    m <- gam(value ~ s(time), data = df)
-    pred <- predict(m, newdata = data.frame(time = future_time))
+    m <- gam(create_gam_formula(), data = df)
+    pred <- predict(m, newdata = create_newdata(future_time))
     results$gam <- pred
-  })
+  }, silent = TRUE)
 
-  ## 7. approxfun - library{stats}
+  ## 7. randomForest - library{randomForest}
   try({
-    af <- approxfun(time, value)
-    results$approxfun <- af(future_time)
-  })
+    m <- randomForest(create_formula("time"), data = df)
+    results$randomForest <- predict(m, newdata = create_newdata(future_time))
+  }, silent = TRUE)
 
-  ## 8. locfit - library{locfit}
+  ## 8. ranger - library{ranger}
   try({
-    m <- locfit(value ~ lp(time), data = df)
-    results$locfit <- predict(m, newdata = data.frame(time = future_time))
-  })
+    m <- ranger(create_formula("time"), data = df)
+    results$ranger <- predict(m, data = create_newdata(future_time))$predictions
+  }, silent = TRUE)
 
-  ## 9. randomForest - library{randomForest}
+  ## 9. xgboost - library{xgboost}
   try({
-    m <- randomForest(value ~ time, data = df)
-    results$randomForest <- predict(m, newdata = data.frame(time = future_time))
-  })
-
-  ## 10. ranger - library{ranger}
-  try({
-    m <- ranger(value ~ time, data = df)
-    results$ranger <- predict(m, data.frame(time = future_time))$predictions
-  })
-
-  ## 11. xgboost - library{xgboost}
-  try({
-    library(Matrix)
-    X <- as.matrix(df$time)
+    X <- model.matrix(~ . - 1 - value, data = df)
     dtrain <- xgboost::xgb.DMatrix(data = X, label = df$value)
     m <- xgboost(data = dtrain, nrounds = 20, objective = "reg:squarederror", verbose = 0)
-    results$xgboost <- predict(m, xgboost::xgb.DMatrix(as.matrix(future_time)))
-  })
+    pred_data <- create_newdata(future_time)
+    newX <- model.matrix(~ . - 1, data = pred_data)
+    results$xgboost <- predict(m, xgboost::xgb.DMatrix(newX))
+  }, silent = TRUE)
 
-  ## 12. svm - library{e1071}
+  ## 10. svm - library{e1071}
   try({
-    m <- svm(value ~ time, data = df)
-    results$svm <- predict(m, newdata = data.frame(time = future_time))
-  })
+    m <- svm(create_formula("time"), data = df)
+    results$svm <- predict(m, newdata = create_newdata(future_time))
+  }, silent = TRUE)
 
-  ## 13. nnet - library{nnet}
+  ## 11. nnet - library{nnet}
   try({
-    m <- nnet(value ~ time, data = df, size = 3, linout = TRUE, trace = FALSE)
-    results$nnet <- predict(m, newdata = data.frame(time = future_time))
-  })
-
-  # ## 14. bayesian_lm - library{brms}
-  # try({
-  #   m <- brm(value ~ time, data = df, chains = 2, iter = 1000, refresh = 0, silent = TRUE)
-  #   pred <- predict(m, newdata = data.frame(time = future_time))[, "Estimate"]
-  #   results$bayesian_lm <- pred
-  # })
-  #
-  # ## 15. bayesian_gam - library{brms}
-  # try({
-  #   m <- brm(value ~ s(time), data = df, chains = 2, iter = 1000, refresh = 0)
-  #   pred <- predict(m, newdata = data.frame(time = future_time))[, "Estimate"]
-  #   results$bayesian_gam <- pred
-  # })
-
-  # Warning messages: for bayesian analysis, I might find ways to fix this though, but bayes is like taking forever to run...(need more time on this, actually I can write a separate R script just for Bayesian, since it is so popular these days, but later, I actually have a name for it "FitContBayes()" haha)
-
-  #   1: There were 38 divergent transitions after warmup. See
-  # https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
-  # to find out why this is a problem and how to eliminate them.
-  # 2: Examine the pairs() plot to diagnose sampling problems
-  #
-  # 3: Bulk Effective Samples Size (ESS) is too low, indicating posterior means and medians may be unreliable.
-  # Running the chains for more iterations may help. See
-  # https://mc-stan.org/misc/warnings.html#bulk-ess
-  # 4: Tail Effective Samples Size (ESS) is too low, indicating posterior variances and tail quantiles may be unreliable.
-  # Running the chains for more iterations may help. See
-  # https://mc-stan.org/misc/warnings.html#tail-ess
+    m <- nnet(create_formula("time"), data = df, size = 3, linout = TRUE, trace = FALSE)
+    results$nnet <- predict(m, newdata = create_newdata(future_time))
+  }, silent = TRUE)
 
   # Calculate signed errors and absolute errors
   signed_errors <- sapply(results, function(pred) {
