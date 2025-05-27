@@ -81,7 +81,7 @@ Also, there is a pdf file for the result figure generated using FitCat_vi in tes
 
 # Apply ChronoPreH in your code
 
-If you want to use it in R, please download it with the command below:
+If you want to use it in R, please install it with the command below:
 
 ```{r}
 if (!require("devtools")) install.packages("devtools")
