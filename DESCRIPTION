@@ -2,8 +2,8 @@ Package: ChronoPreH
 Type: Package
 Title: This package is a prediction model for high-dimensional multivariate time-series data.
 Version: 0.1.0
-Authors@R: YD <yduan@bjmu.edu.cn>
-Maintainer: YD <yduan@bjmu.edu.cn>
+Authors@R: DaraDuan
+Maintainer: DaraDuan
 Description: This R package is a synthetic prediction model for high-dimensional time-series data
 License: GLP-3
 Encoding: UTF-8
