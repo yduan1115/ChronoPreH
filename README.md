@@ -78,11 +78,15 @@ It's in R/FitCat_vi.R
 Also, there is a pdf file for the result figure generated using FitCat_vi in test/visualization/FitCat_visualization_test
 
 
+If you want to use it in R, please download it with the command below:
 
+```{r}
+if (!require("devtools")) install.packages("devtools")
+devtools::install_github("yduan1115/ChronoPreH")
+library(ChronoPreH)
+```
 
-
-
-
+Now, I am working on applying this tool to a real-world dataset, to see how it works.
 
 
 
