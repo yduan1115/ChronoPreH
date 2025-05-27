@@ -1,4 +1,4 @@
-About ChronoPreH
+# About ChronoPreH
 
 Here is the description of this R package ChronoPreH, which in essence is a "meta" of multiple prediction models synthetically.
 
