@@ -81,15 +81,7 @@ Also, there is a pdf file for the result figure generated using FitCat_vi in tes
 
 # Apply ChronoPreH in your code
 
-If you want to use it in R, please install it with the command below:
-
-```{r}
-if (!require("devtools")) install.packages("devtools")
-devtools::install_github("yduan1115/ChronoPreH")
-library(ChronoPreH)
-```
-
-Now, I am working on applying this tool to a real-world dataset, to see how it works.
+I am currently trying to upload this package to CRAN. But before that, I am testing this package using CHARLS harmonized dataset, so that it actually works when looping over a large population.
 
 
 
